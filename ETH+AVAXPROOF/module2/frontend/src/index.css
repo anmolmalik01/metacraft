@@ -1,16 +1,22 @@
 body {
-  margin: 0;
+  margin: 5% 8%;
   font-family: Arial, sans-serif;
-  background-color: #f8f8f8;
-  background-image: linear-gradient(to bottom, #f8f8f8, #e8e8e8);
+  background-color: #000000;
 }
 
+main{
+  background-color: #1033a8;
+  padding: 4%;
+  border-radius: 5px;
+  
+}
 .container {
+  background-color: #589ce6;
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -22,9 +28,6 @@ h1 {
   color: #333;
   font-size: 24px;
   text-align: center;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-  text-decoration: underline;
 }
 
 p {

@@ -1,7 +1,7 @@
 import "./App.css";
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback } from "react";
-import MyContract from "./contracts/SakshamContract.sol/SakshamContract.json";
+import MyContract from "./contracts/Contract.sol/Contract.json";
 
 function App() {
   const [ownerName, setOwnerName] = useState("");
@@ -12,8 +12,8 @@ function App() {
   const [contract, setContract] = useState("");
   const abi = MyContract.abi;
 
-  const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"; // Replace with your contract address
-
+  const contractAddress = "0x510Fbf9Eea88F8520Ea3B31775eE1EDcaDE9fD53"; 
+  
   const connectWallet = useCallback(async () => {
     try {
       const { ethereum } = window;
@@ -120,7 +120,7 @@ function App() {
 
   return (
     <main className="app-container">
-      <h1 className="title">EtherVerse</h1>
+      <h1 className="title">Ethereum Universe</h1>
       <div className="owner-info">
         <h2 className="owner-heading">Owner: {ownerName}</h2>
         <p className="balance">Balance: {ownerBalance} ETH</p>

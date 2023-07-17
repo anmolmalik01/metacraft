@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.18;
+
+/**
+ * ERC20 Token Interface
+ */
+interface IERC20 {
+    // Returns the total token supply
+    function totalSupply() external view returns (uint);
+
+    // Returns the token balance of the specified account
+    function balanceOf(address account) external view returns (uint);
+
+    // Transfers tokens from the caller's account to the recipient account
+    function transfer(address recipient, uint amount) external returns (bool);
+
+    event Transfer(address indexed from, address indexed to, uint amount);
+}
+
+/**
+ * ERC20 Token Contract
+ */
+contract ERC20 is IERC20 {
+    address public immutable owner;
+    uint public totalSupply;
+    mapping (address => uint) public balanceOf;
+
+    /**
+     * Contract constructor
+     */
+    constructor() {
+        owner = msg.sender;
+        totalSupply = 0;
+    }
+
+    /**
+     * Modifier to restrict function execution to the contract owner only
+     */
+    modifier onlyOwner {
+        require(msg.sender == owner, "Contract owner can execute this function");
+        _;
+    }
+
+    string public constant name = "Ember";
+    string public constant symbol = "EMB";
+    uint8 public constant decimals = 18;
+
+    /**
+     * Transfers tokens from the caller's account to the recipient account.
+     * Returns a boolean value indicating the success of the transfer.
+     */
+    function transfer(address recipient, uint amount) external returns (bool) {
+        require(balanceOf[msg.sender] >= amount, "The balance is insufficient");
+
+        balanceOf[msg.sender] -= amount;
+        balanceOf[recipient] += amount;
+
+        emit Transfer(msg.sender, recipient, amount);
+        return true;
+    }
+
+    /**
+     * Mints new tokens and adds them to the owner's account.
+     */
+    function mint(uint amount) external onlyOwner {
+        balanceOf[msg.sender] += amount;
+        totalSupply += amount;
+        emit Transfer(address(0), msg.sender, amount);
+    }
+
+    /**
+     * Burns tokens from the caller's account.
+     */
+    function burn(uint amount) external {
+        require(amount > 0, "Amount should not be zero");
+        require(balanceOf[msg.sender] >= amount, "The balance is insufficient");
+        balanceOf[msg.sender] -= amount;
+        totalSupply -= amount;
+
+        emit Transfer(msg.sender, address(0), amount);
+    }
+}
