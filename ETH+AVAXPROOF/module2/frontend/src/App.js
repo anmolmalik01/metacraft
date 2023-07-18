@@ -1,20 +1,20 @@
 import "./App.css";
 import { ethers } from "ethers";
 import { useEffect, useState, useCallback } from "react";
-import MyContract from "./contracts/Contract.sol/Contract.json";
+import CustomContract from "./contracts/CustomContract.sol/CustomContract.json";
 
 function App() {
-  const [ownerName, setOwnerName] = useState("");
+  const [ownerName, setOwnerName] = useState(""); 
   const [ownerBalance, setOwnerBalance] = useState("");
   const [transferAmount, setTransferAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [selectedAddress, setSelectedAddress] = useState(undefined);
-  const [contract, setContract] = useState("");
-  const abi = MyContract.abi;
+  const [contractInstance, setContractInstance] = useState("");
+  const abi = CustomContract.abi;
 
-  const contractAddress = "0x510Fbf9Eea88F8520Ea3B31775eE1EDcaDE9fD53"; 
+  const contractAddress = "0x510Fbf9Eea88F8520Ea3B31775eE1EDcaDE9fD53";
   
-  const connectWallet = useCallback(async () => {
+  const getContractOwnerName = useCallback(async () => {
     try {
       const { ethereum } = window;
       if (!ethereum) {
@@ -31,38 +31,38 @@ function App() {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(contractAddress, abi, signer);
-      setContract(contract);
+      setContractInstance(contract);
     } catch (error) {
       console.error(error);
     }
   }, [abi]);
 
   useEffect(() => {
-    connectWallet();
-  }, [connectWallet]);
+    getContractOwnerName();
+  }, [getContractOwnerName]);
 
   useEffect(() => {
     async function fetchOwnerData() {
-      if (contract) {
-        const name = await contract.contractOwner();
+      if (contractInstance) {
+        const name = await contractInstance.getContractOwnerName();
         setOwnerName(name);
 
-        const balance = await contract.getOwnerBalance();
+        const balance = await contractInstance.getBalance();
         setOwnerBalance(ethers.utils.formatEther(balance.toString()));
       }
     }
     fetchOwnerData();
-  }, [contract]);
+  }, [contractInstance]);
 
   window.ethereum.on("accountsChanged", (accounts) => {
     if (accounts[0] && accounts[0] !== selectedAddress) {
-      connectWallet();
+      getContractOwnerName();
     }
   });
 
   async function handleTransfer() {
     try {
-      if (!contract) {
+      if (!contractInstance) {
         alert("Please connect your wallet first");
         return;
       }
@@ -73,16 +73,16 @@ function App() {
       }
 
       const value = ethers.utils.parseEther(transferAmount);
-      const transaction = await contract.transferFunds({
+      const transaction = await contractInstance.transferTokens({
         value,
       });
 
       await transaction.wait();
 
-      const balance = await contract.getOwnerBalance();
+      const balance = await contractInstance.getBalance();
       setOwnerBalance(ethers.utils.formatEther(balance.toString()));
 
-      alert("Transfer successful!");
+      alert("Tokens transferred successfully!");
     } catch (error) {
       console.error(error);
       alert("Transfer failed");
@@ -91,7 +91,7 @@ function App() {
 
   async function handleWithdraw() {
     try {
-      if (!contract) {
+      if (!contractInstance) {
         alert("Please connect your wallet first");
         return;
       }
@@ -102,16 +102,16 @@ function App() {
       }
 
       const value = ethers.utils.parseEther(withdrawAmount);
-      const transaction = await contract.withdrawFunds({
+      const transaction = await contractInstance.withdrawTokens({
         value,
       });
 
       await transaction.wait();
 
-      const balance = await contract.getOwnerBalance();
+      const balance = await contractInstance.getBalance();
       setOwnerBalance(ethers.utils.formatEther(balance.toString()));
 
-      alert("Withdrawal successful!");
+      alert("Tokens withdrawn successfully!");
     } catch (error) {
       console.error(error);
       alert("Withdrawal failed");
@@ -122,7 +122,7 @@ function App() {
     <main className="app-container">
       <h1 className="title">Ethereum Universe</h1>
       <div className="owner-info">
-        <h2 className="owner-heading">Owner: {ownerName}</h2>
+        <h2 className="owner-heading">Owner Name: {ownerName}</h2>
         <p className="balance">Balance: {ownerBalance} ETH</p>
       </div>
       <div className="transfer-section">
@@ -167,7 +167,7 @@ function App() {
           Withdraw
         </button>
       </div>
-      <button className="connect-button" onClick={connectWallet}>
+      <button className="connect-button" onClick={getContractOwnerName}>
         Connect to Wallet
       </button>
     </main>

@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 
 async function main() {
   // Get the ContractFactory and Signer accounts
-  const ContractFactory = await ethers.getContractFactory("Contract");
+  const ContractFactory = await ethers.getContractFactory("CustomContract");
   const [deployer] = await ethers.getSigners();
 
   // Deploy the contract
