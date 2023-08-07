@@ -19,8 +19,7 @@ Degen Token (DGN) is a revolutionary decentralized token tailored for gaming ent
 2. Create a new file or import the module3.sol file.
 3. Compile the contract using the Solidity compiler.
 4. Deploy the contract to your desired Ethereum network or local blockchain.
-5. Interact with the contract by calling the `participate` function to cast a vote.
-
+   
 ## Help
 For any issues or questions, please feel free to reach out for assistance.
 
